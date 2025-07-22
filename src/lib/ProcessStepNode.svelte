@@ -6,10 +6,10 @@
 <Handle type="target" position={Position.Left} />
 <div class="maxw-[5vw] px-3 text-center">
     <div>
-        {data.label}
+        {data.agent}
     </div>
     <div>
-        {data.agent}
+        {data.label}
     </div>
     <button class="nodrag">
         <svg
