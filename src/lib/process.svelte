@@ -1,47 +1,50 @@
 <script lang="ts">
-    import { onMount } from "svelte";
     import {
         SvelteFlow,
         Controls,
         Background,
         type Node,
         type Edge,
+        type NodeEventWithPointer,
         Position,
     } from "@xyflow/svelte";
     import "@xyflow/svelte/dist/style.css";
-    import type { NodeEventWithPointer, PaneEvents} from "@xyflow/svelte";
 
-    // Types for node data
-    type InputNodeData = { label: string; agent: string; type: "input" };
-    type ControlNodeData = {
-        label: string;
-        agent: string;
-        condition: string;
-        type: "control";
+    import { agentList } from "./processState.svelte.js";
+    import ProcessStepNode from "./ProcessStepNode.svelte";
+    import ControllStepNode from "./ControllStepNode.svelte";
+    const nodeTypes = {
+        processStep: ProcessStepNode,
+        controllStep: ControllStepNode,
     };
-
-    // Custom node types identifiers
-    type AppNodeType = "start" | "end" | "input" | "control";
-
     // Always have start and end nodes fixed
-    const startNode: Node<InputNodeData> = {
+    const startNode: Node = {
         id: "start",
         type: "input",
-        data: { label: "Start", agent: "system", type: "input" },
+        data: { label: "Start", agent: "system", type: "start" },
         position: { x: 50, y: 200 },
         sourcePosition: Position.Right,
     };
 
-    const endNode: Node<InputNodeData> = {
+    const endNode: Node = {
         id: "end",
-        type: "input",
-        data: { label: "End", agent: "system", type: "input" },
+        type: "output",
+        data: { label: "End", agent: "system", type: "end" },
         position: { x: 650, y: 200 },
         targetPosition: Position.Left,
     };
 
     // State for nodes and edges
-    let nodes: Node[] = [startNode, endNode];
+    let nodes: Node[] = [
+        startNode,
+        endNode,
+        {
+            id: "1",
+            data: { label: "test", agent: "user" },
+            type: "processStep",
+            position: { x: 400, y: 200 },
+        },
+    ];
     let edges: Edge[] = [];
 
     // Context menu state
@@ -63,14 +66,14 @@
     }
 
     // Right-click handler on graph area
-    const onPaneContextMenu = ({event}) => {
+    const onPaneContextMenu = ({ event }) => {
         event.preventDefault();
         showContextMenu = true;
         contextMenuTargetNodeId = null;
         contextMenuX = event.clientX;
         contextMenuY = event.clientY;
         console.log("click graph");
-    }
+    };
 
     // Right-click handler on a node
     const onNodeContextMenu: NodeEventWithPointer = ({ event, node }) => {
@@ -124,28 +127,31 @@
         }
         const id = generateNodeId();
         let data;
+        let newNodeTypeName = ""
         if (newNodeType === "input") {
+            newNodeTypeName = "processStep"
             data = {
                 label: newNodeName.trim(),
                 agent: newNodeAgent.trim(),
                 type: "input",
-            } as InputNodeData;
+            }
         } else {
+            newNodeTypeName = "controllStep"
             data = {
                 label: newNodeName.trim(),
                 agent: newNodeAgent.trim(),
                 condition: newNodeCondition.trim(),
                 type: "control",
-            } as ControlNodeData;
+            }
         }
 
         // Determine position near last context menu
-        const position = { x: contextMenuX - 400, y: contextMenuY - 300};
+        const position = { x: contextMenuX - 400, y: contextMenuY - 300 };
         nodes = [
             ...nodes,
             {
                 id,
-                type: newNodeType,
+                type: newNodeTypeName,
                 data,
                 position,
                 sourcePosition: Position.Right,
@@ -171,7 +177,6 @@
                         id: `e_${contextMenuTargetNodeId}_${id}`,
                         source: contextMenuTargetNodeId,
                         target: id,
-                        animated: true,
                     },
                 ];
             }
@@ -191,12 +196,11 @@
     }
 </script>
 
-<div
-    class="relative w-full h-screen"
->
+<div class="relative w-full h-screen">
     <SvelteFlow
         bind:nodes
         bind:edges
+        {nodeTypes}
         fitView
         onnodecontextmenu={onNodeContextMenu}
         onpanecontextmenu={onPaneContextMenu}
@@ -258,11 +262,16 @@
 
                 <div class="mb-4">
                     <label class="block font-medium mb-1">Agent:</label>
-                    <input
-                        type="text"
+                    <select
                         bind:value={newNodeAgent}
                         class="w-full border rounded px-2 py-1"
-                    />
+                    >
+                        {#each agentList as agent}
+                            {#if agent.status != "deleted"}
+                                <option value={agent.role}>{agent.role}</option>
+                            {/if}
+                        {/each}
+                    </select>
                 </div>
 
                 {#if newNodeType === "control"}

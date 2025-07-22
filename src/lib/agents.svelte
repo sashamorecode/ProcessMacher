@@ -1,17 +1,14 @@
 <script>
+    import { agentList } from "$lib/processState.svelte.js";
     let formVisable = $state(false);
     let role = $state("");
-    let agents = $state([
-        { role: "user", status: "active" },
-        { role: "admin", status: "active" },
-    ]);
     function openForm() {
         console.log("open");
         formVisable = true;
     }
     function submitForm() {
         let agentAlreadyInList = false;
-        agents.map((a) => {
+        agentList.map((a) => {
             if (a.role === role) {
                 agentAlreadyInList = true;
                 a.status = "active";
@@ -19,25 +16,25 @@
             return a;
         });
         if (!agentAlreadyInList) {
-            agents.push({ role: role, status: "active" });
+            agentList.push({ role: role, status: "active" });
         }
         formVisable = false;
         role = "";
-        console.log(agents, role);
+        console.log(agentList, role);
     }
     function cancelForm() {
         formVisable = false;
     }
     function removeAgent(idx) {
-        agents[$state.snapshot(idx).i].status = "deleted";
+        agentList[$state.snapshot(idx).i].status = "deleted";
     }
 </script>
 
 <div class="p-6 mx-5 bg-blue-400 rounded-lg shadow-md space-y-4">
-    <h2 class="text-xl font-semibold text-gray-800">Agents</h2>
+    <h2 class="text-xl font-semibold text-gray-800">agentList</h2>
 
     <div class="grid grid-cols-1 gap-4">
-        {#each agents as a, i}
+        {#each agentList as a, i}
             {#if a.status !== "deleted"}
                 <div
                     class="flex items-center justify-between bg-gray-50 p-3 rounded-md shadow-sm border border-gray-200"
