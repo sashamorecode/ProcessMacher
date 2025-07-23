@@ -10,7 +10,7 @@
     } from "@xyflow/svelte";
     import "@xyflow/svelte/dist/style.css";
 
-    import { agentList } from "./processState.svelte.js";
+    import { agentList, stepState } from "./processState.svelte.js";
     import ProcessStepNode from "./ProcessStepNode.svelte";
     import ControllStepNode from "./ControllStepNode.svelte";
 
@@ -22,7 +22,7 @@
     const startNode: Node = {
         id: "start",
         type: "input",
-        data: { label: "Start", agent: "system", type: "start" },
+        data: stepState[0],
         position: { x: 50, y: 200 },
         sourcePosition: Position.Right,
     };
@@ -30,7 +30,7 @@
     const endNode: Node = {
         id: "end",
         type: "output",
-        data: { label: "End", agent: "system", type: "end" },
+        data: stepState[1],
         position: { x: 650, y: 200 },
         targetPosition: Position.Left,
     };
@@ -41,7 +41,7 @@
         endNode,
         {
             id: "1",
-            data: { label: "test", agent: "user" },
+            data: stepState[2],
             type: "processStep",
             position: { x: 400, y: 200 },
         },
@@ -140,19 +140,21 @@
         let newNodeTypeName = "";
         if (newNodeType === "input") {
             newNodeTypeName = "processStep";
-            data = {
+            stepState.push({
+                id: stepState.length,
                 label: newNodeName.trim(),
                 agent: newNodeAgent.trim(),
                 type: "input",
-            };
+            });
         } else {
             newNodeTypeName = "controllStep";
-            data = {
+            stepState.push({
+                id: stepState.length,
                 label: newNodeName.trim(),
                 agent: newNodeAgent.trim(),
                 condition: newNodeCondition.trim(),
                 type: "control",
-            };
+            });
         }
 
         // Determine position near last context menu
@@ -160,9 +162,9 @@
         nodes = [
             ...nodes,
             {
-                id,
+                id:id,
                 type: newNodeTypeName,
-                data,
+                data: stepState.at(-1),
                 position,
                 sourcePosition: Position.Right,
                 targetPosition: Position.Left,

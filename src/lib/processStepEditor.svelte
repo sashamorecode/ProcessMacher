@@ -1,14 +1,13 @@
 <script>
     import { applyAction } from "$app/forms";
-    import { stepEditor } from "./processState.svelte";
-    let data = $derived(stepEditor.data);
+    import { stepEditor, stepState } from "./processState.svelte";
 </script>
 
 {#if stepEditor.active}
     <div class="p-6 bg-rose-200 rounded-lg h-[95%]">
         <div class="font-bold text-4xl text-center">
-            {data.label}
+            {stepState[stepEditor.currentStepID].label}
         </div>
-        <button onclick={()=>{data.label = "fffff"}}>  .... </button>
+        <button onclick={() => {stepState[stepEditor.currentStepID].label="Fuck"}}>,,afspksf</button>
     </div>
 {/if}

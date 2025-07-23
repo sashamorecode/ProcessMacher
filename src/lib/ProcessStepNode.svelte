@@ -2,9 +2,9 @@
     import { Handle, Position, type NodeEventWithPointer, type NodeProps } from "@xyflow/svelte";
     import {stepEditor} from "./processState.svelte"
     import ProcessStepEditor from "./processStepEditor.svelte";
-    let { data , id}: NodeProps = $props();
+    let { data}: NodeProps = $props();
     const onclickEdit = (({event}) => {
-        stepEditor.currentStepID = id
+        stepEditor.currentStepID = data.id
         stepEditor.active = true
     })
 </script>
