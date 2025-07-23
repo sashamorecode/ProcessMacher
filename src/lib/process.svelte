@@ -13,6 +13,7 @@
     import { agentList } from "./processState.svelte.js";
     import ProcessStepNode from "./ProcessStepNode.svelte";
     import ControllStepNode from "./ControllStepNode.svelte";
+
     const nodeTypes = {
         processStep: ProcessStepNode,
         controllStep: ControllStepNode,
@@ -86,13 +87,22 @@
     };
 
     // Add node action opens creation modal
-    function onAddNode() {
+    function onAddActivityNode() {
         showCreateNodeModal = true;
         showContextMenu = false;
         newNodeName = "";
         newNodeAgent = "";
         newNodeCondition = "";
         newNodeType = "input";
+    }
+
+    function onAddControlNode() {
+        showCreateNodeModal = true;
+        showContextMenu = false;
+        newNodeName = "";
+        newNodeAgent = "";
+        newNodeCondition = "";
+        newNodeType = "control";
     }
 
     // Delete node action
@@ -127,22 +137,22 @@
         }
         const id = generateNodeId();
         let data;
-        let newNodeTypeName = ""
+        let newNodeTypeName = "";
         if (newNodeType === "input") {
-            newNodeTypeName = "processStep"
+            newNodeTypeName = "processStep";
             data = {
                 label: newNodeName.trim(),
                 agent: newNodeAgent.trim(),
                 type: "input",
-            }
+            };
         } else {
-            newNodeTypeName = "controllStep"
+            newNodeTypeName = "controllStep";
             data = {
                 label: newNodeName.trim(),
                 agent: newNodeAgent.trim(),
                 condition: newNodeCondition.trim(),
                 type: "control",
-            }
+            };
         }
 
         // Determine position near last context menu
@@ -205,6 +215,7 @@
         onnodecontextmenu={onNodeContextMenu}
         onpanecontextmenu={onPaneContextMenu}
         class="bg-gray-100"
+        defaultEdgeOptions={{ animated: 'true' }}
     >
         <Background />
         <Controls />
@@ -218,9 +229,15 @@
         >
             <li
                 class="px-4 py-2 hover:bg-gray-200 cursor-pointer"
-                on:click={onAddNode}
+                on:click={onAddActivityNode}
             >
-                Add Node
+                Add Activity
+            </li>
+            <li
+                class="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                on:click={onAddControlNode}
+            >
+                Add Control
             </li>
             {#if contextMenuTargetNodeId && contextMenuTargetNodeId !== "start" && contextMenuTargetNodeId !== "end"}
                 <li
@@ -246,7 +263,7 @@
                         bind:value={newNodeType}
                         class="w-full border rounded px-2 py-1"
                     >
-                        <option value="input">Input Node</option>
+                        <option value="input">Activity Node</option>
                         <option value="control">Control Node</option>
                     </select>
                 </div>
