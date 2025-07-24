@@ -2,7 +2,7 @@
     import Agents from "$lib/agents.svelte";
     import Process from "$lib/process.svelte";
     import ProcessStepEditor from "$lib/processStepEditor.svelte";
-    import ProcessStepNode from "$lib/ProcessStepNode.svelte";
+    export const prerender = true
 </script>
 
 <div class="absolute z-10 opacity-95 mt-5">
@@ -13,4 +13,3 @@
 </div>
 <Process></Process>
 
-<div id="Preview"></div>

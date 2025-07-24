@@ -10,4 +10,5 @@ declare global {
 	}
 }
 
+export const prerender = true
 export {};
