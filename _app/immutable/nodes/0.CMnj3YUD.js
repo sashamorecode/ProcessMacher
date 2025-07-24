@@ -1,1 +1,0 @@
-import"../chunks/DsnmJJEf.js";import{p as o,c as p,f as i,s as c,a as m,b as l}from"../chunks/C57KaU4_.js";/* empty css                */function h(t,a){o(a,!0);const n=!0,e="always";var r=p(),s=i(r);return c(s,()=>a.children),m(t,r),l({prerender:n,trailingSlash:e})}export{h as component};
