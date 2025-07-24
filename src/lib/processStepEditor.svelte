@@ -1,5 +1,7 @@
 <script lang="ts">
-    import { stepEditor, stepState } from "./processState.svelte";
+    import { cubicIn } from "svelte/easing";
+    import { stepEditor, stepState, agentList } from "./processState.svelte";
+    import Layout from "../routes/+layout.svelte";
     let itemTypes = [
         "output-text",
         "input-text",
@@ -13,7 +15,7 @@
         isBeingEdited: boolean;
         data?: any;
     };
-    let formItems: FormItem[] = $state([]);
+    let formItems: FormItem[] = $derived(stepState.at(stepEditor.currentStepID)?.formItems);
     const onAddItemMenu = ({ event, idx }) => {
         event.preventDefault();
         formItems.splice(idx + 1, 0, {
@@ -45,8 +47,29 @@
                 onCloseWindow({ event });
             }}>-</button
         >
-        <div class="font-bold text-4xl text-center">
-            {stepState[stepEditor.currentStepID].label}
+        <div
+            class="font-bold text-4xl text-center bg-gradient-to-b from-red-500 to-gray-400 text-white rounded-lg"
+        >
+            <input
+                type="text"
+                class="font-bold text-4xl text-center"
+                bind:value={stepState[stepEditor.currentStepID].label}
+            />
+        </div>
+        <div
+            class="font-bold text-2xl text-center rounded-lg bg-gray-400 text-white mt-3"
+        >
+            <label>Agent:</label>
+            <select
+                bind:value={stepState[stepEditor.currentStepID].agent}
+                class="text-center"
+            >
+                {#each agentList as agent}
+                    {#if agent.status != "deleted"}
+                        <option value={agent.role}>{agent.role}</option>
+                    {/if}
+                {/each}
+            </select>
         </div>
         <div class="pt-5 flex flex-col">
             <div class="text-5xl text-center">

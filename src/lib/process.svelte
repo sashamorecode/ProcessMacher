@@ -136,7 +136,6 @@
             return;
         }
         const id = generateNodeId();
-        let data;
         let newNodeTypeName = "";
         if (newNodeType === "input") {
             newNodeTypeName = "processStep";
@@ -145,6 +144,7 @@
                 label: newNodeName.trim(),
                 agent: newNodeAgent.trim(),
                 type: "input",
+                formItems: [],
             });
         } else {
             newNodeTypeName = "controllStep";
@@ -154,6 +154,7 @@
                 agent: newNodeAgent.trim(),
                 condition: newNodeCondition.trim(),
                 type: "control",
+                formItems: [],
             });
         }
 

@@ -4,10 +4,10 @@ export const agentList = $state([
     ]);
 export const stepEditor = $state({
         active: false,
-        currentStepID: null,
+        currentStepID: 0,
     });
 export const stepState = $state([
-        {id: 0,label: "Start", agent: "system", type: "start", condition: "never"},
-        {id: 1,label: "end", agent: "system", type: "end"},
-        {id: 2, label: "Start", agent: "system", type: "start"},
+        {id: 0,label: "Start", agent: "system", type: "start", condition: "never",formItems:[] },
+        {id: 1,label: "end", agent: "system", type: "end", formItems:[]},
+        {id: 2, label: "Start", agent: "system", type: "start", formItems: []},
 ]);
