@@ -2,6 +2,7 @@
     import Agents from "$lib/agents.svelte";
     import Process from "$lib/process.svelte";
     import ProcessStepEditor from "$lib/processStepEditor.svelte";
+    import '../app.css';
     export const prerender = true
 </script>
 
