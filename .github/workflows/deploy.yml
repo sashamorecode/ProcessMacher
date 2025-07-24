@@ -28,11 +28,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install npm
-        uses: npm/action-setup@v2
-        with:
-          version: 11
-
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
