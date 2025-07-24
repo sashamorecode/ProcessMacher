@@ -1,7 +1,5 @@
 <script lang="ts">
-    import { cubicIn } from "svelte/easing";
     import { stepEditor, stepState, agentList } from "./processState.svelte";
-    import Layout from "../routes/+layout.svelte";
     let itemTypes = [
         "output-text",
         "input-text",
