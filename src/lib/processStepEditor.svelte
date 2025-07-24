@@ -40,9 +40,9 @@
 </script>
 
 {#if stepEditor.active}
-    <div class="p-6 bg-rose-200 rounded-lg h-[95%] overflow-y-scroll">
+    <div class="p-5 bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg h-[95%] overflow-y-scroll m-3">
         <button
-            class="text-white bg-red-500 hover:bg-red-600 rounded-full w-8 h-8 flex items-center justify-center transition"
+            class="text-white bg-red-500 hover:bg-red-600 rounded-full w-8 h-8 flex items-center justify-center transition absolute translate-x-[-2vw] translate-y-[-3.5vh]"
             onclick={(event) => {
                 onCloseWindow({ event });
             }}>-</button
