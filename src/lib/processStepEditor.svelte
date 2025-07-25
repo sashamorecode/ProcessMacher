@@ -1,11 +1,16 @@
 <script lang="ts">
+    import { derived } from "svelte/store";
     import { stepEditor, stepState, agentList } from "./processState.svelte";
+    import EditButton from "./UIComponents/editButton.svelte";
     let itemTypes = [
-        "output-text",
-        "input-text",
-        "input-document",
-        "input-image",
+        "Output Text",
+        "Input  Text",
+        "Input  Date",
+        "Input  Document",
+        "Input  Image",
+        "Input  Number",
     ];
+    let controllItemTypes = ["Output Variable", "Input Decision"];
     type FormItem = {
         type: string;
         name: string;
@@ -15,6 +20,9 @@
     };
     let formItems: FormItem[] = $derived(
         stepState.at(stepEditor.currentStepID)?.formItems,
+    );
+    let isControllBlock = $derived(
+        stepState.at(stepEditor.currentStepID)?.type === "control",
     );
     const onAddItemMenu = ({ event, idx }) => {
         event.preventDefault();
@@ -37,12 +45,17 @@
         event.preventDefault();
         stepEditor.active = false;
     };
+    //styles
+    let itemStyle = {
+        default: "flex flex-row space-x-3",
+        active: "flex flex-row space-x-4 py-0.5",
+    };
 </script>
 
 {#if stepEditor.active}
-    <div class="absolute z-10 opacity-95 mt-5 w-[30%] ml-[70%] h-[100%]">
+    <div class="absolute z-10 opacity-[98.5%] mt-5 w-[30%] ml-[70%] h-[100%]">
         <div
-            class="p-5 bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg h-[95%] overflow-y-scroll m-3"
+            class="p-5 bg-gradient-to-br from-slate-700 to-slate-800 rounded-lg h-[95%] overflow-y-scroll m-3"
         >
             <button
                 class="text-white bg-red-500 hover:bg-red-600 rounded-full w-8 h-8 flex items-center justify-center transition absolute translate-x-[-2vw] translate-y-[-3.5vh]"
@@ -51,7 +64,7 @@
                 }}>-</button
             >
             <div
-                class="font-bold text-4xl text-center bg-gradient-to-b from-red-500 to-gray-400 text-white rounded-lg"
+                class="font-bold text-4xl text-center text-neutral-200 rounded-lg"
             >
                 <input
                     type="text"
@@ -60,9 +73,9 @@
                 />
             </div>
             <div
-                class="font-bold text-2xl text-center rounded-lg bg-gray-400 text-white mt-3"
+                class="font-bold text-2xl mt-5 mx- rounded-lg text-neutral-200 flex flex-row justify-center"
             >
-                <label>Agent:</label>
+                <label class="mr-2">Agent:</label>
                 <select
                     bind:value={stepState[stepEditor.currentStepID].agent}
                     class="text-center"
@@ -74,23 +87,38 @@
                     {/each}
                 </select>
             </div>
-            <div class="pt-5 flex flex-col">
+            <div class="mt-5 flex flex-col space-y-2">
                 <div class="text-5xl text-center">
                     <button
                         onclick={(event) => {
                             onAddItemMenu({ event });
                         }}
-                        class="text-blue-800 hover:text-red-600">+</button
+                        class="text-blue-800 transition hover:text-red-600"
+                        >+</button
                     >
                 </div>
 
                 {#each formItems as formItem, idx}
                     {#if formItem.isBeingEdited}
                         <div
-                            class="text-xl border-3 rounded-lg flex flex-col space-y-5"
+                            class="text-2xl text-neutral-300 border-3 rounded-lg flex flex-col overflow-scroll border-red-300 p-2 mb-10 space-y-2"
                         >
-                            <div class="flex flex-row space-x-4">
-                                <div class="rounded-md bg-red-400 shrink px-2">
+                            <div class={itemStyle.active}>
+                                <div>Type:</div>
+                                <select bind:value={formItem.type}>
+                                    {#if isControllBlock}
+                                        {#each controllItemTypes as t}
+                                            <option value={t}>{t}</option>
+                                        {/each}
+                                    {:else}
+                                        {#each itemTypes as t}
+                                            <option value={t}>{t}</option>
+                                        {/each}
+                                    {/if}
+                                </select>
+                                <div
+                                    class="rounded-md bg-red-400 shrink px-2 justify-end ml-auto mr-1"
+                                >
                                     <button
                                         onclick={() =>
                                             onSaveItem({ event, idx })}
@@ -99,50 +127,22 @@
                                     </button>
                                 </div>
                             </div>
-
-                            <div class="flex flex-row space-x-4">
-                                <div>Type:</div>
-                                <select bind:value={formItem.type}>
-                                    {#each itemTypes as t}
-                                        <option value={t}>{t}</option>
-                                    {/each}
-                                </select>
+                            <div class={itemStyle.active}>
+                                <div>User Text:</div>
+                                <div>
+                                    <input
+                                        bind:value={formItem.label}
+                                        type="text"
+                                        class=""
+                                    />
+                                </div>
                             </div>
-                            {#if formItem.type === "output-text"}
-                                <div class="flex flex-row space-x-4">
-                                    <div>Enter Label:</div>
-                                    <div>
-                                        <input
-                                            bind:value={formItem.label}
-                                            type="text"
-                                            class=""
-                                        />
-                                    </div>
-                                </div>
+                            {#if formItem.type === "Output Variable"}
+                                <div>TODO</div>
                             {/if}
-                            {#if formItem.type === "input-text"}
-                                <div class="flex flex-row space-x-4">
-                                    <div>Enter Variable Name:</div>
-                                    <div>
-                                        <input
-                                            bind:value={formItem.name}
-                                            type="text"
-                                        />
-                                    </div>
-                                </div>
-                                <div class="flex flex-row space-x-4">
-                                    <div>Enter Label Text:</div>
-                                    <div>
-                                        <input
-                                            bind:value={formItem.label}
-                                            type="text"
-                                        />
-                                    </div>
-                                </div>
-                            {/if}
-                            {#if formItem.type == "input-image" || formItem.type === "input-document"}
-                                <div class="flex flex-row space-x-4">
-                                    <div>name:</div>
+                            {#if formItem.type !== "Output Text" && !isControllBlock}
+                                <div class={itemStyle.active}>
+                                    <div>Variable Name:</div>
                                     <div>
                                         <input
                                             bind:value={formItem.name}
@@ -153,16 +153,31 @@
                             {/if}
                         </div>
                     {:else}
-                        <div class="border-3 m-3 rounded-lg flex-row space-x-4">
-                            <button onclick={() => onClickEdit({ event, idx })}>
-                                <div
-                                    class="rounded-md text-center px-1 py-0.5 bg-red-400 shrink"
-                                >
-                                    EDIT
+                        <div
+                            class="text-xl flex flex-col space-y-2 mx-4 border-3 text-neutral-400 p-2 rounded-lg"
+                        >
+                            <div class="flex flex-row space-x-3">
+                                <div class="">
+                                    {formItem.type.toUpperCase()}
                                 </div>
-                            </button>
-                            <div class="text-xl p-1 text-center">
-                                {formItem.label}
+                                <div>|</div>
+                                <div class="">
+                                    {formItem.name}
+                                </div>
+                                <div class="scale-150 ml-auto mr-1">
+                                    <EditButton
+                                        classProp=""
+                                        onclick={(event) => {
+                                            onClickEdit({ event, idx });
+                                        }}
+                                    ></EditButton>
+                                </div>
+                            </div>
+                            <div class="flex flex-row space-x-3">
+                                <div>User Text:</div>
+                                <div>
+                                    {formItem.label}
+                                </div>
                             </div>
                         </div>
                         <div class="text-5xl text-center">

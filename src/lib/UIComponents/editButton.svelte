@@ -3,7 +3,7 @@
 
     type Props = {
         onclick: EventHandler;
-        classProp: string;
+        classProp?: string;
     };
     let { onclick, classProp } = $props();
 </script>
