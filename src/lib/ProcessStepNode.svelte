@@ -1,12 +1,17 @@
 <script lang="ts">
-    import { Handle, Position, type NodeEventWithPointer, type NodeProps } from "@xyflow/svelte";
-    import {stepEditor} from "./processState.svelte"
+    import {
+        Handle,
+        Position,
+        type NodeEventWithPointer,
+        type NodeProps,
+    } from "@xyflow/svelte";
+    import { stepEditor } from "./processState.svelte";
     import ProcessStepEditor from "./processStepEditor.svelte";
-    let { data}: NodeProps = $props();
-    const onclickEdit = (({event}) => {
-        stepEditor.currentStepID = data.id
-        stepEditor.active = true
-    })
+    let { data }: NodeProps = $props();
+    const onclickEdit = ({ event }) => {
+        stepEditor.currentStepID = data.id;
+        stepEditor.active = true;
+    };
 </script>
 
 <Handle type="target" position={Position.Left} />

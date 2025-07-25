@@ -1,6 +1,12 @@
 <script lang="ts">
     import { Handle, Position, type NodeProps } from "@xyflow/svelte";
     let { data }: NodeProps = $props();
+    import { stepEditor } from "./processState.svelte";
+    import ProcessStepEditor from "./processStepEditor.svelte";
+    const onClickEdit = ({ event }) => {
+        stepEditor.currentStepID = data.id;
+        stepEditor.active = true;
+    };
 </script>
 
 <Handle type="target" position={Position.Left} />
@@ -14,7 +20,7 @@
     <div>
         {data.condition}
     </div>
-    <button class="nodrag">
+    <button class="nodrag" onclick={onClickEdit}>
         <svg
             width="15px"
             height="15px"
@@ -47,5 +53,10 @@
         </svg>
     </button>
 </div>
-<Handle id="pos" type="source" class="!bg-green-500" position={Position.Top} />
-<Handle id="neg" type="source" class="!bg-red-500"  position={Position.Bottom} />
+<Handle
+    id="pos"
+    type="source"
+    class="!bg-green-500"
+    position={Position.Right}
+/>
+<Handle id="neg" type="source" class="!bg-red-500" position={Position.Bottom} />

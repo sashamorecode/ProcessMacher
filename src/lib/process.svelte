@@ -13,11 +13,15 @@
     import { agentList, stepState } from "./processState.svelte.js";
     import ProcessStepNode from "./ProcessStepNode.svelte";
     import ControllStepNode from "./ControllStepNode.svelte";
-
+    import ColoredEdge from "./coloredEdge.svelte";
     const nodeTypes = {
         processStep: ProcessStepNode,
         controllStep: ControllStepNode,
     };
+    const edgeTypes = {
+        coloredEdge: ColoredEdge,
+    };
+
     // Always have start and end nodes fixed
     const startNode: Node = {
         id: "start",
@@ -163,7 +167,7 @@
         nodes = [
             ...nodes,
             {
-                id:id,
+                id: id,
                 type: newNodeTypeName,
                 data: stepState.at(-1),
                 position,
@@ -214,11 +218,12 @@
         bind:nodes
         bind:edges
         {nodeTypes}
+        {edgeTypes}
         fitView
         onnodecontextmenu={onNodeContextMenu}
         onpanecontextmenu={onPaneContextMenu}
         class="bg-gray-100"
-        defaultEdgeOptions={{ animated: 'true' }}
+        defaultEdgeOptions={{ animated: true, type: "coloredEdge" }}
     >
         <Background />
         <Controls />
