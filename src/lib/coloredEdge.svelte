@@ -8,10 +8,10 @@
         getSmoothStepPath,
     } from "@xyflow/svelte";
     import { derived } from "svelte/store";
-    let { sourceHandleId, id, sourceX, sourceY, targetX, targetY, style } =
+    let { sourceHandleId, id, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, style } =
         $props();
     let [path] = $derived(
-        getSmoothStepPath({ sourceX, sourceY, targetX, targetY }),
+        getSmoothStepPath({ sourceX, sourceY, sourcePosition, targetX, targetY, targetPosition }),
     );
     style =
         sourceHandleId === "pos"
