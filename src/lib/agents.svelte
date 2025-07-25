@@ -30,7 +30,7 @@
     }
 </script>
 
-<div class="p-6 mx-5 bg-blue-400 rounded-lg shadow-md space-y-4">
+<div class="p-6 mx-5 bg-slate-300 rounded-lg shadow-md space-y-4 opacity-[98%]">
     <h2 class="text-xl font-semibold text-gray-800">agentList</h2>
 
     <div class="grid grid-cols-1 gap-4">
@@ -41,7 +41,7 @@
                 >
                     <span class="text-gray-700 font-medium mr-5">{a.role}</span>
                     <button
-                        class="text-white bg-red-500 hover:bg-red-600 rounded-full w-8 h-8 flex items-center justify-center transition"
+                        class="text-white bg-red-400 hover:bg-red-600 rounded-full w-8 h-8 flex items-center justify-center transition"
                         onclick={() => removeAgent({ i })}
                         aria-label="Remove Agent"
                     >
@@ -55,7 +55,7 @@
     <!-- Add Agent Button -->
     <button
         onclick={openForm}
-        class="mt-4 text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md transition font-medium"
+        class="mt-4 text-white bg-slate-600 hover:bg-blue-700 px-4 py-2 rounded-md transition font-medium"
     >
         + Add Agent
     </button>

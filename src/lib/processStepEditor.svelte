@@ -58,7 +58,7 @@
             class="p-5 bg-gradient-to-br from-slate-700 to-slate-800 rounded-lg h-[95%] overflow-y-scroll m-3"
         >
             <button
-                class="text-white bg-red-500 hover:bg-red-600 rounded-full w-8 h-8 flex items-center justify-center transition absolute translate-x-[-2vw] translate-y-[-3.5vh]"
+                class="text-white bg-red-300 hover:bg-red-600 rounded-full w-8 h-8 flex items-center justify-center transition absolute translate-x-[-2vw] translate-y-[-3.5vh]"
                 onclick={(event) => {
                     onCloseWindow({ event });
                 }}>-</button
