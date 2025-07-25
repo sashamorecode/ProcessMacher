@@ -25,8 +25,8 @@
     function cancelForm() {
         formVisable = false;
     }
-    function removeAgent(idx) {
-        agentList[$state.snapshot(idx).i].status = "deleted";
+    function removeAgent(index) {
+        agentList[$state.snapshot(index).i].status = "deleted";
     }
 </script>
 

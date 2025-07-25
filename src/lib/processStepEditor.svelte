@@ -13,7 +13,9 @@
         isBeingEdited: boolean;
         data?: any;
     };
-    let formItems: FormItem[] = $derived(stepState.at(stepEditor.currentStepID)?.formItems);
+    let formItems: FormItem[] = $derived(
+        stepState.at(stepEditor.currentStepID)?.formItems,
+    );
     const onAddItemMenu = ({ event, idx }) => {
         event.preventDefault();
         formItems.splice(idx + 1, 0, {
@@ -38,137 +40,143 @@
 </script>
 
 {#if stepEditor.active}
-    <div class="p-5 bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg h-[95%] overflow-y-scroll m-3">
-        <button
-            class="text-white bg-red-500 hover:bg-red-600 rounded-full w-8 h-8 flex items-center justify-center transition absolute translate-x-[-2vw] translate-y-[-3.5vh]"
-            onclick={(event) => {
-                onCloseWindow({ event });
-            }}>-</button
-        >
+    <div class="absolute z-10 opacity-95 mt-5 w-[30%] ml-[70%] h-[100%]">
         <div
-            class="font-bold text-4xl text-center bg-gradient-to-b from-red-500 to-gray-400 text-white rounded-lg"
+            class="p-5 bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg h-[95%] overflow-y-scroll m-3"
         >
-            <input
-                type="text"
-                class="font-bold text-4xl text-center"
-                bind:value={stepState[stepEditor.currentStepID].label}
-            />
-        </div>
-        <div
-            class="font-bold text-2xl text-center rounded-lg bg-gray-400 text-white mt-3"
-        >
-            <label>Agent:</label>
-            <select
-                bind:value={stepState[stepEditor.currentStepID].agent}
-                class="text-center"
+            <button
+                class="text-white bg-red-500 hover:bg-red-600 rounded-full w-8 h-8 flex items-center justify-center transition absolute translate-x-[-2vw] translate-y-[-3.5vh]"
+                onclick={(event) => {
+                    onCloseWindow({ event });
+                }}>-</button
             >
-                {#each agentList as agent}
-                    {#if agent.status != "deleted"}
-                        <option value={agent.role}>{agent.role}</option>
+            <div
+                class="font-bold text-4xl text-center bg-gradient-to-b from-red-500 to-gray-400 text-white rounded-lg"
+            >
+                <input
+                    type="text"
+                    class="font-bold text-4xl text-center"
+                    bind:value={stepState[stepEditor.currentStepID].label}
+                />
+            </div>
+            <div
+                class="font-bold text-2xl text-center rounded-lg bg-gray-400 text-white mt-3"
+            >
+                <label>Agent:</label>
+                <select
+                    bind:value={stepState[stepEditor.currentStepID].agent}
+                    class="text-center"
+                >
+                    {#each agentList as agent}
+                        {#if agent.status != "deleted"}
+                            <option value={agent.role}>{agent.role}</option>
+                        {/if}
+                    {/each}
+                </select>
+            </div>
+            <div class="pt-5 flex flex-col">
+                <div class="text-5xl text-center">
+                    <button
+                        onclick={(event) => {
+                            onAddItemMenu({ event });
+                        }}
+                        class="text-blue-800 hover:text-red-600">+</button
+                    >
+                </div>
+
+                {#each formItems as formItem, idx}
+                    {#if formItem.isBeingEdited}
+                        <div
+                            class="text-xl border-3 rounded-lg flex flex-col space-y-5"
+                        >
+                            <div class="flex flex-row space-x-4">
+                                <div class="rounded-md bg-red-400 shrink px-2">
+                                    <button
+                                        onclick={() =>
+                                            onSaveItem({ event, idx })}
+                                    >
+                                        SAVE
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-row space-x-4">
+                                <div>Type:</div>
+                                <select bind:value={formItem.type}>
+                                    {#each itemTypes as t}
+                                        <option value={t}>{t}</option>
+                                    {/each}
+                                </select>
+                            </div>
+                            {#if formItem.type === "output-text"}
+                                <div class="flex flex-row space-x-4">
+                                    <div>Enter Label:</div>
+                                    <div>
+                                        <input
+                                            bind:value={formItem.label}
+                                            type="text"
+                                            class=""
+                                        />
+                                    </div>
+                                </div>
+                            {/if}
+                            {#if formItem.type === "input-text"}
+                                <div class="flex flex-row space-x-4">
+                                    <div>Enter Variable Name:</div>
+                                    <div>
+                                        <input
+                                            bind:value={formItem.name}
+                                            type="text"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="flex flex-row space-x-4">
+                                    <div>Enter Label Text:</div>
+                                    <div>
+                                        <input
+                                            bind:value={formItem.label}
+                                            type="text"
+                                        />
+                                    </div>
+                                </div>
+                            {/if}
+                            {#if formItem.type == "input-image" || formItem.type === "input-document"}
+                                <div class="flex flex-row space-x-4">
+                                    <div>name:</div>
+                                    <div>
+                                        <input
+                                            bind:value={formItem.name}
+                                            type="text"
+                                        />
+                                    </div>
+                                </div>
+                            {/if}
+                        </div>
+                    {:else}
+                        <div class="border-3 m-3 rounded-lg flex-row space-x-4">
+                            <button onclick={() => onClickEdit({ event, idx })}>
+                                <div
+                                    class="rounded-md text-center px-1 py-0.5 bg-red-400 shrink"
+                                >
+                                    EDIT
+                                </div>
+                            </button>
+                            <div class="text-xl p-1 text-center">
+                                {formItem.label}
+                            </div>
+                        </div>
+                        <div class="text-5xl text-center">
+                            <button
+                                onclick={(event) => {
+                                    onAddItemMenu({ event, idx });
+                                }}
+                                class="text-blue-800 hover:text-red-600"
+                                >+</button
+                            >
+                        </div>
                     {/if}
                 {/each}
-            </select>
-        </div>
-        <div class="pt-5 flex flex-col">
-            <div class="text-5xl text-center">
-                <button
-                    onclick={(event) => {
-                        onAddItemMenu({ event });
-                    }}
-                    class="text-blue-800 hover:text-red-600">+</button
-                >
             </div>
-
-            {#each formItems as formItem, idx}
-                {#if formItem.isBeingEdited}
-                    <div
-                        class="text-xl border-3 rounded-lg flex flex-col space-y-5"
-                    >
-                        <div class="flex flex-row space-x-4">
-                            <div class="rounded-md bg-red-400 shrink px-2">
-                                <button
-                                    onclick={() => onSaveItem({ event, idx })}
-                                >
-                                    SAVE
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="flex flex-row space-x-4">
-                            <div>Type:</div>
-                            <select bind:value={formItem.type}>
-                                {#each itemTypes as t}
-                                    <option value={t}>{t}</option>
-                                {/each}
-                            </select>
-                        </div>
-                        {#if formItem.type === "output-text"}
-                            <div class="flex flex-row space-x-4">
-                                <div>Enter Label:</div>
-                                <div>
-                                    <input
-                                        bind:value={formItem.label}
-                                        type="text"
-                                        class=""
-                                    />
-                                </div>
-                            </div>
-                        {/if}
-                        {#if formItem.type === "input-text"}
-                            <div class="flex flex-row space-x-4">
-                                <div>Enter Variable Name:</div>
-                                <div>
-                                    <input
-                                        bind:value={formItem.name}
-                                        type="text"
-                                    />
-                                </div>
-                            </div>
-                            <div class="flex flex-row space-x-4">
-                                <div>Enter Label Text:</div>
-                                <div>
-                                    <input
-                                        bind:value={formItem.label}
-                                        type="text"
-                                    />
-                                </div>
-                            </div>
-                        {/if}
-                        {#if formItem.type == "input-image" || formItem.type === "input-document"}
-                            <div class="flex flex-row space-x-4">
-                                <div>name:</div>
-                                <div>
-                                    <input
-                                        bind:value={formItem.name}
-                                        type="text"
-                                    />
-                                </div>
-                            </div>
-                        {/if}
-                    </div>
-                {:else}
-                    <div class="border-3 m-3 rounded-lg flex-row space-x-4">
-                        <button onclick={() => onClickEdit({ event, idx })}>
-                            <div
-                                class="rounded-md text-center px-1 py-0.5 bg-red-400 shrink"
-                            >
-                                EDIT
-                            </div>
-                        </button>
-                        <div class="text-xl p-1 text-center">
-                            {formItem.label}
-                        </div>
-                    </div>
-                    <div class="text-5xl text-center">
-                        <button
-                            onclick={(event) => {
-                                onAddItemMenu({ event, idx });
-                            }}
-                            class="text-blue-800 hover:text-red-600">+</button
-                        >
-                    </div>
-                {/if}
-            {/each}
         </div>
     </div>
 {/if}
