@@ -53,7 +53,7 @@
 </script>
 
 {#if stepEditor.active}
-    <div class="absolute z-10 opacity-[98.5%] mt-5 w-[30%] ml-[70%] h-[100%]">
+    <div class="absolute z-10 opacity-[98.5%] mt-5 w-[30%] ml-[70%] h-auto max-h-[90vh] overflow-y-scroll">
         <div
             class="p-5 bg-gradient-to-br from-slate-700 to-slate-800 rounded-lg h-[95%] overflow-y-scroll m-3"
         >

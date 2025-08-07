@@ -3,10 +3,13 @@
     import { agentList } from "./processState.svelte";
     import Agents from "./agents.svelte";
     import type { EventHandler } from "svelte/elements";
+
     const CentralProcessServerBaseURL = "127.0.0.1:9999/";
+    let props = $props();
     let nodes = useNodes();
     let edges = useEdges();
     let viewport = useViewport();
+
     function serializeState() {
         let mState = {
             name: "TODO",
@@ -46,9 +49,4 @@
     }
 </script>
 
-<div>
-    <button
-        class="text-2xl bg-red-400"
-        onclick={saveState}>Save</button
-    >
-</div>
+<button class="text-2xl bg-red-400 {props.class}" onclick={saveState}>Save</button>
