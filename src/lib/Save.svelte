@@ -3,7 +3,7 @@
     import { agentList } from "./processState.svelte";
     import Agents from "./agents.svelte";
     import type { EventHandler } from "svelte/elements";
-
+    const CentralProcessServerBaseURL = "127.0.0.1:9999/";
     let nodes = useNodes();
     let edges = useEdges();
     let viewport = useViewport();
@@ -34,10 +34,21 @@
     function saveState(event: Event) {
         event.preventDefault();
         let stringState = serializeState();
+        fetch(CentralProcessServerBaseURL + "processModel", {
+            method: "POST",
+            body: stringState,
+            headers: {
+                "Content-type": "application/json; charset=UTF-8",
+            },
+        }).then((response) => console.log(response.statusText));
+
         console.log(stringState);
     }
 </script>
 
 <div>
-    <button class="text-2xl absolute w-[10vw] h-10 bg-red-400 z-10 translate-x-[90vw]" onclick={saveState}>Save</button>
+    <button
+        class="text-2xl bg-red-400"
+        onclick={saveState}>Save</button
+    >
 </div>

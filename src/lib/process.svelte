@@ -14,6 +14,9 @@
     import ProcessStepNode from "./ProcessStepNode.svelte";
     import ControllStepNode from "./ControllStepNode.svelte";
     import ColoredEdge from "./coloredEdge.svelte";
+
+    let props = $props();
+
     const nodeTypes = {
         processStep: ProcessStepNode,
         controllStep: ControllStepNode,
@@ -40,7 +43,7 @@
     };
 
     // State for nodes and edges
-    let nodes: Node[] = [
+    let nodes: Node[] = $state([
         startNode,
         endNode,
         {
@@ -49,21 +52,21 @@
             type: "processStep",
             position: { x: 400, y: 200 },
         },
-    ];
-    let edges: Edge[] = [];
+    ]);
+    let edges: Edge[] = $state([]);
 
     // Context menu state
-    let contextMenuX = 0;
-    let contextMenuY = 0;
-    let contextMenuTargetNodeId: string | null = null;
-    let showContextMenu = false;
+    let contextMenuX = $state(0);
+    let contextMenuY = $state(0);
+    let contextMenuTargetNodeId: string | null = $state(null);
+    let showContextMenu = $state(false);
 
     // Node creation modal state
-    let showCreateNodeModal = false;
-    let newNodeType: "input" | "control" = "input";
-    let newNodeName = "";
-    let newNodeAgent = "";
-    let newNodeCondition = "";
+    let showCreateNodeModal = $state(false);
+    let newNodeType: "input" | "control" = $state("input");
+    let newNodeName = $state("");
+    let newNodeAgent = $state("");
+    let newNodeCondition = $state("");
 
     // Utility: Generate unique ID for new nodes
     function generateNodeId() {
@@ -163,7 +166,7 @@
         }
 
         // Determine position near last context menu
-        const position = { x: contextMenuX - 400, y: contextMenuY - 300 };
+        const position = { x: contextMenuX, y: contextMenuY};
         nodes = [
             ...nodes,
             {
@@ -213,7 +216,7 @@
     }
 </script>
 
-<div class="relative w-full h-screen">
+<div class={props.class}>
     <SvelteFlow
         bind:nodes
         bind:edges
